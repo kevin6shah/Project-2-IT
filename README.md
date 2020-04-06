@@ -1,9 +1,9 @@
 Made by Manav Patel (mpp124) and Kevin Shah (kas665)
 
-We implemented recursive client functionality by making sure the client kept querying until a response was returned. In order to do so, it first combed through the list of the RS and if no response was returned, then it would comb through the list of the TS. There was a full response generated for each query. 
+We implemented the LS functionality by a simple yet effective way. Basically we used the sockets ability to turn on and off its blocking/non-blocking characteristic. For example, when we had to send a query from the LS, we turned on blocking IO so that the entire message would send. However, when it came for the TS to look and potentially send back a response, we turned on non-blocking IO (socket.setblocking = 0). After, we waited for 5 seconds after querying both of the TS. This was ample time for the TS to search for the query and potentially buffer a response. Then using a simple nested  TRY and EXCEPT, we were able to discern which TS sent a response back. If it went into both of the EXCEPT statements, we knew that there was no response.
 
 There are no issues in the project, everything is working seamlessly.
 
-The main problem we faced was establishing a connection between a server and client on two remote machines. However by following the proper procedure to connect sockets to each other, the problem was surmounted.
+The main problem we faced was being able to figure out how to implement the timeout for TS1 and TS2 servers. The way we troubleshooted this issue was by solving it piece by piece. First we tried to determine what would happen if we ran the whole program as a blocking call and we just ended up in an infinite loop as expected. The next step was determining where we would put time.sleep(5) in our code that would allow us to recieve all data if it exists. As suspected, the code worked when we put the timeout before the recv() call rather than after.
 
-We learned a great deal of things working on this project. One thing we gained was a better understanding of the Python language. Another thing, was how to properly implement servers and clients on the computer using sockets. And lastly we learned the basics on how a DNS system works.
+We learned a great deal of things working on this project. One thing we gained was a better understanding of the Python language. Another thing, was how to properly implement servers and clients on the computer using multiple sockets. And lastly we learned the basics on how a Load Balancing DNS server works.
