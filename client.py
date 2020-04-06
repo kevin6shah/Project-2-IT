@@ -34,7 +34,7 @@ def client():
 
     # Initialize/prepare the I/O files
     file = loadfile("PROJ2-HNS.txt")
-    # outputFile = open("RESOLVED.txt", "w")
+    outputFile = open("RESOLVED.txt", "w")
 
     for query in file:
         # Send query to the server
@@ -43,7 +43,10 @@ def client():
 
         # Recieve a response from Load Server
         data = ls.recv(100).decode("utf-8")
-        print("[S]: Message from Load Server: " + data)
+        print ("[S]: Message from Load Server: " + data)
+        outputFile.write(data + '\n')
+
+        print
 
     ls.send("/end".encode("UTF-8"))
 

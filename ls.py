@@ -51,8 +51,6 @@ def server():
     #connect to both
     ts1.connect(server_binding_ts1)
     ts2.connect(server_binding_ts2)
-    ts1.setblocking(0)
-    ts2.setblocking(0)
 
     while True:
         # Message recieved from Client
@@ -62,18 +60,33 @@ def server():
         print ("[S]: Query from Client: " + query)
         
         try:
+            ts1.setblocking(1)
+            ts2.setblocking(1)
             ts1.send(query.encode('utf-8'))
             ts2.send(query.encode('utf-8'))
+            ts1.setblocking(0)
+            ts2.setblocking(0)
         except:
-            print ("Could not send to ts1 or ts2")
+            print ("[S]: Could not send to ts1 or ts2")
             break
         
-        result1 = ts1.recv(100).decode('utf-8')
-        result2 = ts2.recv(100).decode('utf-8')
         time.sleep(5)
 
-        print (result1)
-        print (result2)
+        try:
+            result1 = ts1.recv(100).decode('utf-8')
+            print ("[TS1]: Result: " + str(result1))
+            csockid.send(result1.encode('UTF-8'))
+        except:
+            try:
+                result2 = ts2.recv(100).decode('utf-8')
+                print ("[TS2]: Result: " + str(result2))
+                csockid.send(result2.encode('UTF-8'))
+            except:
+                errorString = query + " - Error:HOST NOT FOUND"
+                print ("[S]: " + errorString)
+                csockid.send(errorString.encode('UTF-8'))
+        
+        print
         
     ts1.send("/end".encode("UTF-8"))
     ts2.send("/end".encode("UTF-8"))

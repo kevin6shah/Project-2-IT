@@ -42,10 +42,11 @@ def server():
         query = csockid.recv(200).decode("utf-8").lower()
         if query == "/end" or query == "":
             break
-        print("[S]: Query from Client: " + query)
+        print("[S]: Query from LS: " + query)
         try:
             ip, types = topLevelTable[query]
             csockid.send((query + " " + ip + " " + types).encode("utf-8"))
+            print ("[S]: Sent to LS: " + str(query + " " + ip + " " + types))
         except:
             #csockid.send("Error:HOST NOT FOUND".encode("utf-8"))
             #do nothing hahaha
