@@ -40,7 +40,7 @@ def server():
     while True:
         # Message recieved from Client
         query = csockid.recv(200).decode("utf-8").lower()
-        if query == "/end":
+        if query == "/end" or query == "":
             break
         print("[S]: Query from Client: " + query)
         try:

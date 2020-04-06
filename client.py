@@ -45,7 +45,7 @@ def client():
         data = ls.recv(100).decode("utf-8")
         print("[S]: Message from Load Server: " + data)
 
-    ls.send("/End".encode("UTF-8"))
+    ls.send("/end".encode("UTF-8"))
 
 
 if __name__ == "__main__":

@@ -51,8 +51,8 @@ def server():
     #connect to both
     ts1.connect(server_binding_ts1)
     ts2.connect(server_binding_ts2)
-    ts1.settimeout(5)
-    ts2.settimeout(5)
+    ts1.setblocking(0)
+    ts2.setblocking(0)
 
     while True:
         # Message recieved from Client
@@ -60,10 +60,23 @@ def server():
         if query == "/end":
             break
         print ("[S]: Query from Client: " + query)
-
-        ts1.send(query.encode('utf-8'))
-        ts2.send(query.encode('utf-8'))
         
+        try:
+            ts1.send(query.encode('utf-8'))
+            ts2.send(query.encode('utf-8'))
+        except:
+            print ("Could not send to ts1 or ts2")
+            break
+        
+        result1 = ts1.recv(100).decode('utf-8')
+        result2 = ts2.recv(100).decode('utf-8')
+        time.sleep(5)
+
+        print (result1)
+        print (result2)
+        
+    ts1.send("/end".encode("UTF-8"))
+    ts2.send("/end".encode("UTF-8"))
 
     # Close the server socket
     ss.close()
