@@ -60,15 +60,14 @@ def server():
         print ("[S]: Query from Client: " + query)
         
         try:
-            ts1.setblocking(1)
-            ts2.setblocking(1)
             ts1.send(query.encode('utf-8'))
-            ts2.send(query.encode('utf-8'))
-            ts1.setblocking(0)
-            ts2.setblocking(0)
+            ts2.send(query.encode('utf-8'))   
         except:
             print ("[S]: Could not send to ts1 or ts2")
             break
+        
+        ts1.setblocking(0)
+        ts2.setblocking(0)
         
         time.sleep(5)
 
@@ -85,6 +84,9 @@ def server():
                 errorString = query + " - Error:HOST NOT FOUND"
                 print ("[S]: " + errorString)
                 csockid.send(errorString.encode('UTF-8'))
+
+        ts1.setblocking(1)
+        ts2.setblocking(1)
         
         print
         
